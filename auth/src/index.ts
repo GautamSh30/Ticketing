@@ -1,6 +1,7 @@
 import express from 'express';
 import 'express-async-errors'
 import {json} from 'body-parser'
+import mongoose from "mongoose";
 
 import { getUserRouter } from "./routes/current-user.routes";
 import { signinRouter } from "./routes/singin.routes";
@@ -24,6 +25,17 @@ app.all("*", () => {
 })
 app.use(errorHandler);
 
-app.listen(3000, () => {
-    console.log('Listening on port 3000!!!');
-})
+const connect = async () => {
+    try {
+        const connection = await mongoose.connect("mongodb://auth-mongo-cluster-srv:27017/auth");
+        console.log("Connected to MongoDB");
+    }  catch (err) {
+        console.log(err);
+    }
+
+    app.listen(3000, () => {
+        console.log("Listensing at http://localhost:3000");
+    })
+}
+
+connect();
